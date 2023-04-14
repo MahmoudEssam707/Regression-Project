@@ -6,4 +6,5 @@
 # SSR,SSE
 # Anova table
 # Confidence interval for estimator at given significant level,
-# Scatter plot contain fitted line. Calcution of C.l. for mean response and new observation
+# Scatter plot contain fitted line. 
+# Calcution of C.l. for mean response and new observation
