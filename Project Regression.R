@@ -26,3 +26,5 @@ Beta_0 <- mean(y) - Beta_1*mean(x)
 # Plotting data 
 plot(x,y)
 abline(a=Beta_0,b=Beta_1)
+#----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
+
