@@ -28,3 +28,32 @@ plot(x,y)
 abline(a=Beta_0,b=Beta_1)
 #----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
 
+#----------------------Mohamed Hassan and Safy Fathy--------------------------#
+Confidence_Interval_of_B1 = function(C){
+  c = 1-((1-C)/2)
+  t = qt(c,df=(n-2))
+  margin =  t * sqrt(MSE/Sxx)
+  lower_bound = B1_hat-margin
+  upper_bound = B1_hat+margin
+  CI = c(lower_bound,upper_bound)
+  return(CI)
+  
+}
+B1 = Confidence_Interval_of_B1(0.95)
+print(paste0("B1 is between interval " , data.frame(B1)))
+
+
+Confidence_Interval_of_B0 = function(C){
+  c = 1-((1-C)/2)
+  t = qt(c,df=(n-2))
+  margin =  t * sqrt(MSE*((1/n)+(x_bar^2/Sxx)))
+  lower_bound = B0_hat-margin
+  upper_bound = B0_hat+margin
+  CI = c(lower_bound,upper_bound) 
+  return(CI)
+  
+}
+
+B0 = Confidence_Interval_of_B0(0.95)
+print(paste0("B0 is between interval " , data.frame(B0) ))
+#----------------------Mohamed Hassan and Safy Fathy--------------------------#
