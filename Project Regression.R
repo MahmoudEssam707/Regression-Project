@@ -16,13 +16,14 @@ Data <- data.frame(
 # Getting needed data
 x <- Data$x
 y <- Data$y
+n <- length(x)
 # Calculating Sxx and Sxy and Syy
-Sxx <- sum(x^2) -length(x)*(mean(x)^2) 
-Syy <- sum(y^2) -length(y)*(mean(y)^2)
-Sxy <- sum(x*y) -length(x)*mean(x)*mean(y)
+Sxx <- round(sum(x^2) -n*(mean(x)^2),2)
+Syy <- round(sum(y^2) -n*(mean(y)^2),2)
+Sxy <- round(sum(x*y) -n*mean(x)*mean(y),2)
 # Calculating intercept(Beta Node) and Slope(Beta 1)
-Beta_1 <- Sxy / Sxx
-Beta_0 <- mean(y) - Beta_1*mean(x)
+Beta_1 <- round(Sxy / Sxx,2)
+Beta_0 <- round(mean(y) - Beta_1*mean(x),2)
 # Plotting data 
 plot(x,y)
 abline(a=Beta_0,b=Beta_1)
