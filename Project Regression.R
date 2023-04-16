@@ -30,11 +30,20 @@ abline(a=Beta_0,b=Beta_1)
 #----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
-ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F,"",""),ncol=4)
+F0 <- MSR / MSE # calculate F0
+F0
+ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
 row.names(ANOVA)=c("Treatment","Error","Total")
 colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
 ANOVA<- as.table(ANOVA)
-ANOVA
+# calculate f_test 
+Fc<- qf(alpha, DFR, DFE)
+if (F0 >Fc) {
+  print("Reject H0 and has relation")
+} else {
+  print("dont reject H0 has no relation")
+}
+
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
