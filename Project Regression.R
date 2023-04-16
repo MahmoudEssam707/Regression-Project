@@ -28,7 +28,13 @@ Beta_0 <- round(mean(y) - Beta_1*mean(x),2)
 plot(x,y)
 abline(a=Beta_0,b=Beta_1)
 #----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
-
+#----------------------Ali elsayed  and ziad ashraf --------------------------#
+ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F,"",""),ncol=4)
+row.names(ANOVA)=c("Treatment","Error","Total")
+colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
+ANOVA<- as.table(ANOVA)
+ANOVA
+#----------------------Ali elsayed  and ziad ashraf --------------------------#
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
 Confidence_Interval_of_B1 = function(C){
   c = 1-((1-C)/2)
@@ -58,3 +64,10 @@ Confidence_Interval_of_B0 = function(C){
 B0 = Confidence_Interval_of_B0(0.95)
 print(paste0("B0 is between interval " , data.frame(B0) ))
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
+
+
+
+
+
+
+
