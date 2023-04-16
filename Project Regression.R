@@ -29,20 +29,30 @@ plot(x,y)
 abline(a=Beta_0,b=Beta_1)
 #----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
 #-----------------------------------------------------------------------------#
+#----------------------mohamed hamdy and bishoy-------------------------------#
+#calculating sum squares (regression, error,total)
+SSR <-Beta_1^2*Sxx
+SST <-Syy
+SSE <-SST-SSR
+
+#calculating Mean sum squares(regression,error)
+MSR<-SSR/1
+MSE<-SSE/n
+#----------------------mohamed hamdy and bishoy-------------------------------#
+#-----------------------------------------------------------------------------#
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
-F0 <- MSR / MSE # calculate F0
+# calculate F0
+F0 <- MSR / MSE
 #DEGREE OF FREEDOM 
 DFR=1
 DFE=n-2
 DFT= DFR+DFE
-#MEAN SQUARE
-MSR=SSR
-MSE=SSE/DFE
 #anova table
 ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
 row.names(ANOVA)=c("Treatment","Error","Total")
 colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
 ANOVA<- as.table(ANOVA)
+ANOVA
 # calculate f_test 
 Fc<- qf(alpha, DFR, DFE)
 if (F0 >Fc) {
