@@ -31,7 +31,14 @@ abline(a=Beta_0,b=Beta_1)
 #-----------------------------------------------------------------------------#
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
 F0 <- MSR / MSE # calculate F0
-F0
+#DEGREE OF FREEDOM 
+DFR=1
+DFE=n-2
+DFT= DFR+DFE
+#MEAN SQUARE
+MSR=SSR
+MSE=SSE/DFE
+#anova table
 ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
 row.names(ANOVA)=c("Treatment","Error","Total")
 colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
