@@ -44,6 +44,7 @@ row.names(ANOVA)=c("Treatment","Error","Total")
 colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
 ANOVA<- as.table(ANOVA)
 # calculate f_test 
+alpha= as.numeric(readline("enter the alpha:"));
 Fc<- qf(alpha, DFR, DFE)
 if (F0 >Fc) {
   print("Reject H0 and has relation")
