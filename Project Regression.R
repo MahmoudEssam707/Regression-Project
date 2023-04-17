@@ -38,9 +38,6 @@ abline(a=Beta_0,b=Beta_1,col="red",lwd=3)
 SSR <-Beta_1^2*Sxx
 SST <-Syy
 SSE <-SST-SSR
-#calculating Mean sum squares(regression,error)
-MSR<-SSR/1
-MSE<-SSE/n
 #calculating coeffecient(correlation, determination)
 Rsquare<-as.numeric(SSR/SST)
 print(paste('dependent variable explained by an independent variable in regression model ',Rsquare*100,'%'))
@@ -61,6 +58,9 @@ F0 <- MSR / MSE
 DFR=1
 DFE=n-2
 DFT= DFR+DFE
+#calculating Mean sum squares(regression,error)
+MSR<-SSR/DFR
+MSE<-SSE/DFE
 #anova table
 ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
 row.names(ANOVA)=c("Treatment","Error","Total")
