@@ -91,6 +91,8 @@ Confidence_Interval_of_B1 = function(C){
   return(CI)
   
 }
+B1 = Confidence_Interval_of_B1(0.95)
+
 
 Confidence_Interval_of_B0 = function(C){
   c = 1-((1-C)/2)
@@ -98,14 +100,49 @@ Confidence_Interval_of_B0 = function(C){
   margin =  t * sqrt(MSE*((1/n)+(xbar^2/Sxx)))
   lower_bound = Beta_0-margin
   upper_bound = Beta_0+margin
-  CI = c(lower_bound,upper_bound)
+  CI = c(lower_bound,upper_bound) 
   return(CI)
+  
 }
-
-B1 = Confidence_Interval_of_B1(0.95)
-print(paste0("B1 is between interval " , data.frame(B1)))
 
 B0 = Confidence_Interval_of_B0(0.95)
 print(paste0("B0 is between interval " , data.frame(B0) ))
+print(paste0("B1 is between interval " , data.frame(B1)))
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
 #-----------------------------------------------------------------------------#
+
+#--------------------Abdelrhman Ashraf and Abdullah Hussein--------------------#
+#------------------------------------------------------------------------------#
+
+Xn = as.numeric(readline("Enter the X for mean response: "))
+RatX=B0+B1*Xn
+RatX
+
+alpha = 0.05
+t=qt(alpha/2, length(x)-2,lower.tail = F)
+t
+
+CL = as.numeric((1-alpha)*100)
+L= RatX - t * sqrt(MSE*(1/length(x)+(Xn-Xbar)^2/Sxx))
+U=RatX+ t * sqrt(MSE*(1/length(x)+(Xn-Xbar)^2/Sxx))
+
+print(paste("Confidence Intervat for mean response at confidence level", CL,"%"))
+print(paste("[",L, ",",U,"]"))
+
+Xnew = as.numeric(readline("Enter the X for new observation: "))
+RatXnew=B0+B1*Xnew
+RatXnew
+
+alpha = 0.05
+t=qt(alpha/2, length(x)-2,lower.tail = F)
+t
+
+CL = as.numeric((1-alpha)*100)
+Lnew= RatXnew - t * sqrt(MSE*(1+1/length(x)+(Xnew-Xbar)^2/Sxx))
+Unew= RatXnew + t * sqrt(MSE*(1+1/length(x)+(Xnew-Xbar)^2/Sxx))
+
+print(paste("Confidence Intervat for new observation at confidence level", CL,"%"))
+print(paste("[",Lnew, ",",Unew,"]"))
+
+#--------------------Abdelrhman Ashraf and Abdullah Hussein--------------------#
+#------------------------------------------------------------------------------#
