@@ -17,13 +17,15 @@ Data <- data.frame(
 x <- Data$x
 y <- Data$y
 n <- length(x)
+xbar<-mean(x)
+ybar<-mean(y)
 # Calculating Sxx and Sxy and Syy
-Sxx <- round(sum(x^2) -n*(mean(x)^2),2)
-Syy <- round(sum(y^2) -n*(mean(y)^2),2)
-Sxy <- round(sum(x*y) -n*mean(x)*mean(y),2)
+Sxx<- round(sum(x^2) -n*(xbar^2),2)
+Syy <- round(sum(y^2) -n*(ybar^2),2)
+Sxy <- round(sum(x*y) -n*xbar*ybar,2)
 # Calculating intercept(Beta Node) and Slope(Beta 1)
 Beta_1 <- round(Sxy / Sxx,2)
-Beta_0 <- round(mean(y) - Beta_1*mean(x),2)
+Beta_0 <- round(ybar - Beta_1*xbar,2)
 # Plotting data 
 plot(x,y)
 abline(a=Beta_0,b=Beta_1)
@@ -38,6 +40,17 @@ SSE <-SST-SSR
 #calculating Mean sum squares(regression,error)
 MSR<-SSR/1
 MSE<-SSE/n
+#calculating coeffecient(correlation, determination)
+Rsquare<-as.numeric(SSR/SST)
+print(paste('dependent variable explained by an independent variable in regression model ',Rsquare*100,'%'))
+if(Beta_1<0){
+  r<-0-sqrt(Rsquare)
+  print(paste("the model has negative correlation about ",r))
+  
+}else{
+  r<-sqrt(Rsquare)
+  print(paste("the model has positive correlation about ",r))
+}
 #----------------------mohamed hamdy and bishoy-------------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
@@ -54,7 +67,7 @@ colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
 ANOVA<- as.table(ANOVA)
 ANOVA
 # calculate f_test 
-alpha= as.numeric(readline("enter the alpha:"));
+alpha <- as.numeric(readline("Enter significance level : "))
 Fc<- qf(alpha, DFR, DFE)
 if (F0 >Fc) {
   print("Reject H0 and has relation")
@@ -69,8 +82,8 @@ Confidence_Interval_of_B1 = function(C){
   c = 1-((1-C)/2)
   t = qt(c,df=(n-2))
   margin =  t * sqrt(MSE/Sxx)
-  lower_bound = B1_hat-margin
-  upper_bound = B1_hat+margin
+  lower_bound = Beta_1-margin
+  upper_bound = Beta_1+margin
   CI = c(lower_bound,upper_bound)
   return(CI)
   
@@ -82,9 +95,9 @@ print(paste0("B1 is between interval " , data.frame(B1)))
 Confidence_Interval_of_B0 = function(C){
   c = 1-((1-C)/2)
   t = qt(c,df=(n-2))
-  margin =  t * sqrt(MSE*((1/n)+(x_bar^2/Sxx)))
-  lower_bound = B0_hat-margin
-  upper_bound = B0_hat+margin
+  margin =  t * sqrt(MSE*((1/n)+(xbar^2/Sxx)))
+  lower_bound = Beta_0-margin
+  upper_bound = Beta_0+margin
   CI = c(lower_bound,upper_bound) 
   return(CI)
   
