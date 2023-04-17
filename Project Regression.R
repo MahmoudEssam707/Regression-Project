@@ -3,8 +3,8 @@
 # Check list
 # Sxx,Syy,Sxy(Checked)(Mahmoud and Zyad).
 # Beta 1,Beta0(Checked)(Mahmoud and Zyad).
-# SSR,SSE,SST,MSR,MSE,MST(checked)(Bisho and Hamdi).
-# Anova table(Checked)(ziad and ali).
+# SSR,SSE,SST,coeffecient(correlation, determination)(checked)(Bisho and Hamdi).
+# MSR,MSE,F0,Anova table,f-test(Checked)(ziad and ali).
 # Confidence interval for estimator at given significant level(Checked)(gaber and safy).
 # Calculation of C.l. for mean response and new observation(Gowely and Ashraf).
 # Scatter plot contain fitted line(Checked)(Mahmoud).
@@ -52,8 +52,6 @@ if(Beta_1<0){
 #----------------------mohamed hamdy and bishoy-------------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
-# calculate F0
-F0 <- MSR / MSE
 #DEGREE OF FREEDOM 
 DFR=1
 DFE=n-2
@@ -61,6 +59,8 @@ DFT= DFR+DFE
 #calculating Mean sum squares(regression,error)
 MSR<-SSR/DFR
 MSE<-SSE/DFE
+# calculate F0
+F0 <- MSR / MSE
 #anova table
 ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
 row.names(ANOVA)=c("Treatment","Error","Total")
