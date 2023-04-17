@@ -20,12 +20,12 @@ n <- length(x)
 xbar<-mean(x)
 ybar<-mean(y)
 # Calculating Sxx and Sxy and Syy
-Sxx<- round(sum(x^2) -n*(xbar^2),2)
-Syy <- round(sum(y^2) -n*(ybar^2),2)
-Sxy <- round(sum(x*y) -n*xbar*ybar,2)
+Sxx<- sum(x^2) -n*(xbar^2)
+Syy <- sum(y^2) -n*(ybar^2)
+Sxy <- sum(x*y) -n*xbar*ybar
 # Calculating intercept(Beta Node) and Slope(Beta 1)
-Beta_1 <- round(Sxy / Sxx,2)
-Beta_0 <- round(ybar - Beta_1*xbar,2)
+Beta_1 <- Sxy / Sxx
+Beta_0 <- ybar - Beta_1*xbar
 # Plotting data 
 plot(x,y,main = "Fitted Model",
      xlab ="Features",
@@ -78,32 +78,18 @@ if (F0 > Fc) {
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
-Confidence_Interval_of_B1 = function(C){
-  c = 1-((1-C)/2)
-  t = qt(c,df=(n-2))
-  margin =  t * sqrt(MSE/Sxx)
-  lower_bound = Beta_1-margin
-  upper_bound = Beta_1+margin
-  CI = c(lower_bound,upper_bound)
-  return(CI)
-  
-}
-B1 = Confidence_Interval_of_B1(0.95)
-print(paste0("B1 is between interval " , data.frame(B1)))
+#Confidence Interval For B0 
+n=length(y)
+t <- qt(alpha/2, n - 2,lower.tail = F)
+Upper_B0=Beta_0+t*sqrt(MSE * ( 1/n + ( (mean(x))^2 / Sxx ) ) )
+Lower_B0=Beta_0-t*sqrt(MSE * ( 1/n + ( (mean(x))^2 / Sxx ) ) )
+cat("Confidence Interval for B0 is :",Lower_B0," < B0 < ",Upper_B0,"\n")
 
-
-Confidence_Interval_of_B0 = function(C){
-  c = 1-((1-C)/2)
-  t = qt(c,df=(n-2))
-  margin =  t * sqrt(MSE*((1/n)+(xbar^2/Sxx)))
-  lower_bound = Beta_0-margin
-  upper_bound = Beta_0+margin
-  CI = c(lower_bound,upper_bound) 
-  return(CI)
-  
-}
-
-B0 = Confidence_Interval_of_B0(0.95)
-print(paste0("B0 is between interval " , data.frame(B0) ))
+#Confidence Interval for B1 
+Upper_B1=Beta_1+(t*sqrt(MSE/Sxx))
+Lower_B1=Beta_1-(t*sqrt(MSE/Sxx))
+cat("Confidence Interval for B1 is :",Lower_B1," < B1 < ",Upper_B1,"\n")
+z<- lm(y~x,data=Data)
+confint(z)
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
 #-----------------------------------------------------------------------------#
