@@ -3,7 +3,7 @@
 # Check list
 # Sxx,Syy,Sxy(Checked)(Mahmoud and Zyad).
 # Beta 1,Beta0(Checked)(Mahmoud and Zyad).
-# SSR,SSE,SST,MSR,MSE,MST(Bisho and Hamdi).
+# SSR,SSE,SST,MSR,MSE,MST(checked)(Bisho and Hamdi).
 # Anova table(Checked)(ziad and ali).
 # Confidence interval for estimator at given significant level(Checked)(gaber and safy).
 # Calculation of C.l. for mean response and new observation(Gowely and Ashraf).
@@ -27,8 +27,10 @@ Sxy <- round(sum(x*y) -n*xbar*ybar,2)
 Beta_1 <- round(Sxy / Sxx,2)
 Beta_0 <- round(ybar - Beta_1*xbar,2)
 # Plotting data 
-plot(x,y)
-abline(a=Beta_0,b=Beta_1)
+plot(x,y,main = "Fitted Model",
+     xlab ="Features",
+     ylab="target")
+abline(a=Beta_0,b=Beta_1,col="red",lwd=3)
 #----------------------Mahmoud Essam and Zyad Ashraf--------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------mohamed hamdy and bishoy-------------------------------#
@@ -36,7 +38,6 @@ abline(a=Beta_0,b=Beta_1)
 SSR <-Beta_1^2*Sxx
 SST <-Syy
 SSE <-SST-SSR
-
 #calculating Mean sum squares(regression,error)
 MSR<-SSR/1
 MSE<-SSE/n
@@ -69,12 +70,11 @@ ANOVA
 # calculate f_test 
 alpha <- as.numeric(readline("Enter significance level : "))
 Fc<- qf(alpha, DFR, DFE)
-if (F0 >Fc) {
-  print("Reject H0 and has relation")
+if (F0 > Fc) {
+  print("Reject H0, There's relation between X and Y")
 } else {
-  print("dont reject H0 has no relation")
+  print("dont reject H0, There's no relation")
 }
-
 #----------------------Ali elsayed  and ziad ashraf --------------------------#
 #-----------------------------------------------------------------------------#
 #----------------------Mohamed Hassan and Safy Fathy--------------------------#
