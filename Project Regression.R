@@ -4,14 +4,14 @@ library(readxl)
 library(jsonlite)
 library(haven)
 library(feather)
-path <- readline("Please put your path :")
+path <- noquote(choose.files())
 value <- as.numeric(readline("Which type of data do you need? : \n1-CSV\n2-Excel\n3-Json\n4-XML\n5-SQL\n6-SAS\n7-SPSS\n8-Feather"))
 Data <- switch (value,
                 Data=read.csv(path),
                 Data=read_excel(path),
                 Data=fromJSON(path),
                 Data=xmlTreeParse(file = path),
-                Data=sqlQuery(con(odbcConnect("path.db")),"SELECT * FROM MY TABLE"),
+                Data=sqlQuery(con(odbcConnect(path)),"SELECT * FROM MY TABLE"),
                 Data=read_sas(path),
                 Data=read_spss(path),
                 Data=read_feather(path))
