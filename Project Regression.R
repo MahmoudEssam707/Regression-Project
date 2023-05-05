@@ -15,10 +15,7 @@ Data <- switch (value,
                 Data=read_sas(path),
                 Data=read_spss(path),
                 Data=read_feather(path))
-SL <- as.numeric(readline("Enter significance level : "))
-Xn = as.numeric(readline("Enter the X for mean response: "))
-Xnew = as.numeric(readline("Enter the X for new observation: "))
-SLR <- function(Data,SL,Xn,Xnew){ 
+SLR <- function(Data){ 
   # Getting needed data
   x <- Data$x
   y <- Data$y
@@ -66,6 +63,7 @@ SLR <- function(Data,SL,Xn,Xnew){
   colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
   ANOVA<- as.table(ANOVA)
   # calculate f_test 
+  SL <- as.numeric(readline("Enter significance level : "))
   Fc<- qf(SL, DFR, DFE)
   if (F0 > Fc) {
     print("Reject H0, There's relation between X and Y")
@@ -95,11 +93,13 @@ SLR <- function(Data,SL,Xn,Xnew){
   B1 = Confidence_Interval_of_B1(SL)
   lower_bound_b1 = B1[2]
   upper_bound_b1 = B1[1]
+  Xn = as.numeric(readline("Enter the X for mean response: "))
   RatX=Beta_0+Beta_1*Xn
   t=qt(SL/2, length(x)-2,lower.tail = F)
   CL = as.numeric((1-SL)*100)
   L=RatX-t*sqrt(MSE*(1/length(x)+(Xn-xbar)^2/Sxx))
   U=RatX+t*sqrt(MSE*(1/length(x)+(Xn-xbar)^2/Sxx))
+  Xnew = as.numeric(readline("Enter the X for new observation: "))
   RatXnew=Beta_0+Beta_1*Xnew
   t=qt(SL/2, length(x)-2,lower.tail = F)
   CL = as.numeric((1-SL)*100)
@@ -124,4 +124,65 @@ SLR <- function(Data,SL,Xn,Xnew){
               ,"\n[",Lnew, ",",Unew,"]"))
   ANOVA
 }
-SLR(Data,SL,Xn,Xnew)
+# MLP NEED FOR UPDATES, DON'T RUN IT !!!!
+MLP <- function(Data){
+  # Create a sample data frame
+  data <- data.frame(
+    weight=c(69,83,77,75,71,73),
+    age=c(50,20,20,30,30,50),
+    blood=c(120,141,124,126,117,129)
+  )
+  #_______________________________# Mahmoud & Zyad_______________________________________________#
+  my_df <- as.matrix(data)
+  big_x <- cbind(b0=rep(1,length(data)),my_df)
+  x <- big_x[,-ncol(big_x)]
+  y <- subset(my_df, select = ncol(my_df))
+  xt <- t(x)
+  xtx <- xt%*%x
+  xtx_inverse <- solve(xtx)
+  xty <- xt%*%y
+  betas <- xtx_inverse%*%xt%*%y
+  betas
+  #_______________________________# Mahmoud & Zyad_______________________________________________#
+  #_______________________________# Bisho & Hamdy________________________________________________#
+  
+  # Calculate y bar
+  y_bar=mean(y) 
+  # length of y
+  n<-length(y) 
+  # y transpose
+  yt<- t(y)  
+  # betas transpose
+  betas_t<-t(betas) 
+  # Calculate betas * (x transpose)
+  betas_x_t<-betas_t%*%xt  
+  # Calculate SSE
+  SSE<- (yt%*%y)-(betas_x_t%*%y) 
+  # Calaulate SST
+  SST<-(yt%*%y)-n*(y_bar)^2    
+  # CAlculate SSR
+  SSR=SST-SSE               
+  # Calculate R Square
+  Rsquare=1-(SSE/SST)   
+  #_______________________________# Bisho & Hamdy________________________________________________#
+  #_______________________________# Ziad & Ali___________________________________________________#
+  #DEGREE OF FREEDOM
+  k <- ncol(big_x[, -c(1, ncol(big_x))])
+  DFR=k
+  DFE=n-(k+1)
+  DFT= DFR+DFE
+  #calculating Mean sum squares(regression,error)
+  MSR<-SSR/DFR
+  MSE<-SSE/DFE
+  # calculate F0
+  F0 <- MSR / MSE
+  #anova table
+  ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
+  row.names(ANOVA)=c("Treatment","Error","Total")
+  colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
+  ANOVA<- as.table(ANOVA)
+  ANOVA
+  #_______________________________# Ziad & Ali___________________________________________________#
+  
+}
+SLR(Data)
