@@ -4,19 +4,8 @@ library(readxl)
 library(jsonlite)
 library(haven)
 library(feather)
-path <- noquote(choose.files())
-value <- as.numeric(readline("Which type of data do you need? : \n1-CSV\n2-Excel\n3-Json\n4-XML\n5-SQL\n6-SAS\n7-SPSS\n8-Feather"))
-Data <- switch (value,
-                Data=read.csv(path),
-                Data=read_excel(path),
-                Data=fromJSON(path),
-                Data=xmlTreeParse(file = path),
-                Data=sqlQuery(con(odbcConnect(path)),"SELECT * FROM MY TABLE"),
-                Data=read_sas(path),
-                Data=read_spss(path),
-                Data=read_feather(path))
 SLR <- function(Data){ 
-  # Getting needed data
+  # Getting needed Data
   x <- Data$x
   y <- Data$y
   n <- length(x)
@@ -29,7 +18,7 @@ SLR <- function(Data){
   # Calculating intercept(Beta Node) and Slope(Beta 1)
   Beta_1 <- Sxy / Sxx
   Beta_0 <- ybar - Beta_1*xbar
-  # Plotting data 
+  # Plotting Data 
   plot(x,y,main = "Fitted Model",
        xlab ="Features",
        ylab="target")
@@ -125,16 +114,10 @@ SLR <- function(Data){
   ANOVA
 }
 # MLP NEED FOR UPDATES, DON'T RUN IT !!!!
-MLP <- function(Data){
-  # Create a sample data frame
-  data <- data.frame(
-    weight=c(69,83,77,75,71,73),
-    age=c(50,20,20,30,30,50),
-    blood=c(120,141,124,126,117,129)
-  )
+MLR <- function(Data){
   #_______________________________# Mahmoud & Zyad_______________________________________________#
-  my_df <- as.matrix(data)
-  big_x <- cbind(b0=rep(1,length(data)),my_df)
+  my_df <- as.matrix(Data)
+  big_x <- cbind(b0=rep(1,length(Data)),my_df)
   x <- big_x[,-ncol(big_x)]
   y <- subset(my_df, select = ncol(my_df))
   xt <- t(x)
@@ -169,7 +152,8 @@ MLP <- function(Data){
   #DEGREE OF FREEDOM
   k <- ncol(big_x[, -c(1, ncol(big_x))])
   DFR=k
-  DFE=n-(k+1)
+  p = k+1
+  DFE=n-p
   DFT= DFR+DFE
   #calculating Mean sum squares(regression,error)
   MSR<-SSR/DFR
@@ -181,8 +165,42 @@ MLP <- function(Data){
   row.names(ANOVA)=c("Treatment","Error","Total")
   colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
   ANOVA<- as.table(ANOVA)
-  ANOVA
+  SL <- as.numeric(readline("Enter significance level : "))
+  # FTEST
+  #######
   #_______________________________# Ziad & Ali___________________________________________________#
-  
+  #_______________________________# Gaber & Safy_________________________________________________#
+  diagonal_vector = xtx_inverse[row(xtx_inverse)==col(xtx_inverse)]
+  diagonal_vector*as.vector(MSE)
+  Confidence_Interval_of_B_vector <- function(SL){
+    t <- qt(SL/2, df = n - p, lower.tail = FALSE)
+    CI <- data.frame(lowers = numeric(length(betas)), uppers = numeric(length(betas)))
+    for (beta in 1:length(betas)){
+      margin <-  t * sqrt(MSE * diagonal_vector[beta])
+      lower_bound <- betas[beta] - margin
+      upper_bound <- betas[beta] + margin
+      CI[beta,] <- c(lower_bound, upper_bound)
+    }
+    return(CI)
+  }
+  Confidence_Interval_of_B_vector(0.05)
+  #_______________________________# Gaber & Safy_________________________________________________#
 }
-SLR(Data)
+path <- noquote(choose.files())
+value_of_format <- as.numeric(readline("Which type of Data do you need? : \n1-CSV\n2-Excel\n3-Json\n4-XML\n5-SQL\n6-SAS\n7-SPSS\n8-Feather"))
+Data <- switch (value_of_format,
+                Data=read.csv(path),
+                Data=read_excel(path),
+                Data=fromJSON(path),
+                Data=xmlTreeParse(file = path),
+                Data=sqlQuery(con(odbcConnect(path)),"SELECT * FROM MY TABLE"),
+                Data=read_sas(path),
+                Data=read_spss(path),
+                Data=read_feather(path),
+                stop("Invalid input. one of the choices above you"))
+value_of_regression <- as.numeric(readline("Which type of method do you need? :\n1-SLR(Simple Linear Regression)\n2-MLR(Multiple Linear Regression)"))
+Function <- switch(value_of_regression,
+                   SLR = SLR(Data),
+                   MLR = MLR(Data),
+                   stop("Invalid input. Please enter 1 or 2."))
+print(Function)
