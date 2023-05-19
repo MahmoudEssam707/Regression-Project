@@ -185,6 +185,35 @@ MLR <- function(Data){
   }
   Confidence_Interval_of_B_vector(0.05)
   #_______________________________# Gaber & Safy_________________________________________________#
+  # PRINTS #
+cat("Summary statistics:\n")
+cat("  Matrix of X:\n")
+print(x)
+cat("\n")
+cat("  Vector of y:\n")
+print(y)
+cat("\n")
+cat("  Matrix of (XtX):\n")
+print(xtx)
+cat("\n")
+cat("  Matrix of C (XtX)^-1:\n")
+print(xtx_inverse)
+cat("\n")
+cat("  Beta values:\n")
+print(betas)
+cat("\n")
+cat("SST: ",SST)
+cat("\n")
+cat("SSR: ",SSR)
+cat("\n")
+cat("SSE: ",SSE)
+cat("\n")
+cat("  R-squared:",round(Rsquare * 100, 2))
+
+# Print ANOVA table
+cat("\nANOVA table:\n")
+print(ANOVA)
+
 }
 path <- noquote(choose.files())
 value_of_format <- as.numeric(readline("Which type of Data do you need? : \n1-CSV\n2-Excel\n3-Json\n4-XML\n5-SQL\n6-SAS\n7-SPSS\n8-Feather"))
@@ -203,4 +232,3 @@ Function <- switch(value_of_regression,
                    SLR = SLR(Data),
                    MLR = MLR(Data),
                    stop("Invalid input. Please enter 1 or 2."))
-print(Function)
