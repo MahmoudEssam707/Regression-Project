@@ -113,114 +113,154 @@ SLR <- function(Data){
               ,"\n[",Lnew, ",",Unew,"]"))
   ANOVA
 }
-# MLP NEED FOR UPDATES, DON'T RUN IT !!!!
 MLR <- function(Data){
-  #_______________________________# Mahmoud & Zyad_______________________________________________#
-  my_df <- as.matrix(Data)
-  big_x <- cbind(b0=rep(1,length(Data)),my_df)
-  x <- big_x[,-ncol(big_x)]
-  y <- subset(my_df, select = ncol(my_df))
-  xt <- t(x)
-  xtx <- xt%*%x
-  xtx_inverse <- solve(xtx)
-  xty <- xt%*%y
-  betas <- xtx_inverse%*%xt%*%y
-  betas
-  #_______________________________# Mahmoud & Zyad_______________________________________________#
-  #_______________________________# Bisho & Hamdy________________________________________________#
-  
-  # Calculate y bar
-  y_bar=mean(y) 
-  # length of y
-  n<-length(y) 
-  # y transpose
-  yt<- t(y)  
-  # betas transpose
-  betas_t<-t(betas) 
-  # Calculate betas * (x transpose)
-  betas_x_t<-betas_t%*%xt  
-  # Calculate SSE
-  SSE<- (yt%*%y)-(betas_x_t%*%y) 
-  # Calaulate SST
-  SST<-(yt%*%y)-n*(y_bar)^2    
-  # CAlculate SSR
-  SSR=SST-SSE               
-  # Calculate R Square
-  Rsquare=1-(SSE/SST)   
-  #_______________________________# Bisho & Hamdy________________________________________________#
-  #_______________________________# Ziad & Ali___________________________________________________#
-  #DEGREE OF FREEDOM
-  k <- ncol(big_x[, -c(1, ncol(big_x))])
-  DFR=k
-  p = k+1
-  DFE=n-p
-  DFT= DFR+DFE
-  #calculating Mean sum squares(regression,error)
-  MSR<-SSR/DFR
-  MSE<-SSE/DFE
-  # calculate F0
-  F0 <- MSR / MSE
-  #anova table
-  ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
-  row.names(ANOVA)=c("Treatment","Error","Total")
-  colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
-  ANOVA<- as.table(ANOVA)
-  SL <- as.numeric(readline("Enter significance level : "))
-  #Calculate  f test for MLR
-  Fc<- qf(SL, DFR, DFE)
-  if (F0 > Fc) {
-    print("H0=B1,B2,B3,....,Bn=0\n Reject H0, There's relation between X and Y")
-  } else {
-    print("at leastt one not equal zero \n dont reject H0, There's no relation")
-  }
-  # FTEST
-  #######
-  #_______________________________# Ziad & Ali___________________________________________________#
-  #_______________________________# Gaber & Safy_________________________________________________#
-  diagonal_vector = xtx_inverse[row(xtx_inverse)==col(xtx_inverse)]
-  diagonal_vector*as.vector(MSE)
-  Confidence_Interval_of_B_vector <- function(SL){
-    t <- qt(SL/2, df = n - p, lower.tail = FALSE)
-    CI <- data.frame(lowers = numeric(length(betas)), uppers = numeric(length(betas)))
-    for (beta in 1:length(betas)){
-      margin <-  t * sqrt(MSE * diagonal_vector[beta])
-      lower_bound <- betas[beta] - margin
-      upper_bound <- betas[beta] + margin
-      CI[beta,] <- c(lower_bound, upper_bound)
-    }
-    return(CI)
-  }
-  Confidence_Interval_of_B_vector(0.05)
-  #_______________________________# Gaber & Safy_________________________________________________#
-  # PRINTS #
-cat("Summary statistics:\n")
-cat("  Matrix of X:\n")
-print(x)
-cat("\n")
-cat("  Vector of y:\n")
-print(y)
-cat("\n")
-cat("  Matrix of (XtX):\n")
-print(xtx)
-cat("\n")
-cat("  Matrix of C (XtX)^-1:\n")
-print(xtx_inverse)
-cat("\n")
-cat("  Beta values:\n")
-print(betas)
-cat("\n")
-cat("SST: ",SST)
-cat("\n")
-cat("SSR: ",SSR)
-cat("\n")
-cat("SSE: ",SSE)
-cat("\n")
-cat("  R-squared:",round(Rsquare * 100, 2))
-
-# Print ANOVA table
-cat("\nANOVA table:\n")
-print(ANOVA)
-
+my_df <- as.matrix(Data)
+n_col = length(colnames(my_df))
+big_x <- cbind(b0=rep(1,length(Data)),my_df)
+x <- big_x[,-ncol(big_x)]
+y <- subset(my_df, select = ncol(my_df))
+xt <- t(x)
+xtx <- xt%*%x
+xtx_inverse <- solve(xtx)
+xty <- xt%*%y
+betas <- xtx_inverse%*%xt%*%y
+y_hat <- x%*%betas
+k <- ncol(big_x[, -c(1, ncol(big_x))])
+p = k+1
+# Calculate y bar
+y_bar=mean(y) 
+# length of y
+n_row<-length(y) 
+# y transpose
+yt<- t(y)  
+# betas transpose
+betas_t<-t(betas) 
+# Calculate betas * (x transpose)
+betas_x_t<-betas_t%*%xt  
+# Calculate SSE
+SSE<- (yt%*%y)-(betas_x_t%*%y) 
+# Calaulate SST
+SST<-(yt%*%y)-n_row*(y_bar)^2    
+# CAlculate SSR
+SSR=SST-SSE               
+# Calculate R Square
+Rsquare=1-(SSE/SST)   
+Rsquare_adj = 1-((SSE*(n_row-1))/(SST*(n_row-p)))
+#DEGREE OF FREEDOM
+k <- ncol(big_x[, -c(1, ncol(big_x))])
+DFR=k
+p = k+1
+DFE=n_row-p
+DFT= DFR+DFE
+#calculating Mean sum squares(regression,error)
+MSR<-SSR/DFR
+MSE<-SSE/DFE
+# calculate F0
+F0 <- MSR / MSE
+#anova table
+ANOVA=matrix(c(SSR,SSE,SST,DFR,DFE,DFT,MSR,MSE,"",F0,"",""),ncol=4)
+row.names(ANOVA)=c("Treatment","Error","Total")
+colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
+ANOVA<- as.table(ANOVA)
+SL <- as.numeric(readline("Enter significance level : "))
+#Calculate  f test for MLR
+Fc<- qf(SL, DFR, DFE)
+if (F0 > Fc) {
+ print("H0=B1,B2,B3,....,Bn=0")
+ print("Ha=at least one not equal zero")
+ print("Reject H0, There's relation between X and Y")
+} else {
+ print("H0=B1,B2,B3,....,Bn=0")
+ print("Ha=at least one not equal zero")
+ print("dont reject H0, There's no relation")
+}
+diagonal_vector = xtx_inverse[row(xtx_inverse)==col(xtx_inverse)]
+Confidence_Interval_of_B_vector <- function(SL){
+ t <- qt(SL/2, df = n_row - p, lower.tail = FALSE)
+ CI <- data.frame(lowers = numeric(length(betas)), uppers = numeric(length(betas)))
+ for (beta in 1:length(betas)){
+   margin <-  t * sqrt(MSE * diagonal_vector[beta])
+   lower_bound <- betas[beta] - margin
+   upper_bound <- betas[beta] + margin
+   CI[beta,] <- c(lower_bound, upper_bound)
+ }
+ return(CI)
+}
+Confidence_Interval_of_B_vector_data = Confidence_Interval_of_B_vector(SL)
+#confidence interval for mean response
+xo <- c(1)
+for (i in 1:(n_col-1)) {
+ xo[i + 1] <- as.numeric(readline(paste("Enter the X", i, "for mean response: ")))
+}
+x0 = as.matrix(xo)
+y0=t(x0) %*% betas
+t <- qt(SL/2, df = n_row - p, lower.tail = FALSE)
+X0t_xtx_inverse_X0=t(x0)%*%xtx_inverse%*%x0
+L_Mean_Response=y0-t*sqrt((MSE*X0t_xtx_inverse_X0))
+U_Mean_Response=y0+t*sqrt((MSE*X0t_xtx_inverse_X0))
+#confidence interval for new observation
+xnew <- c(1)
+for (i in 1:(n_col-1)) {
+ xnew[i + 1] <- as.numeric(readline(paste("Enter the X", i, "for new obs.: ")))
+}
+XN = as.matrix(xnew)
+ynew= t(XN) %*% betas
+t <- qt(SL/2, df = n_row - p, lower.tail = FALSE)
+Xnewt_xtx_inverse_Xnew=t(XN)%*%xtx_inverse%*%XN
+L_New_Obs = ynew - t * sqrt((MSE * (diag(1) + Xnewt_xtx_inverse_Xnew)))
+U_New_Obs = ynew + t * sqrt((MSE * (diag(1) + Xnewt_xtx_inverse_Xnew)))
+# ERROR STANDARD
+di = (y-y_hat)/sqrt(MSE[1])
+# PRINTS #
+print_function <- function(){
+ cat("Summary statistics:\n")
+ 
+ cat("Matrix of X:\n")
+ print(x)
+ cat("\n")
+ 
+ cat("Vector of y:\n")
+ print(y)
+ cat("\n")
+ 
+ cat("Matrix of (XtX):\n")
+ print(xtx)
+ cat("\n")
+ 
+ cat("Matrix of C (XtX)^-1:\n")
+ print(xtx_inverse)
+ cat("\n")
+ 
+ cat("Beta values:\n")
+ print(betas)
+ cat("\n")
+ 
+ cat("SST: ", SST, "\n")
+ cat("SSR: ", SSR, "\n")
+ cat("SSE: ", SSE, "\n")
+ 
+ cat("R-squared: ", round(Rsquare * 100, 2), "%\n")
+ cat("R-squared Adjusted : ", round(Rsquare_adj * 100, 2), "%\n")
+ # Print ANOVA table
+ cat("ANOVA table:\n")
+ print(ANOVA)
+ 
+ # Print the confidence interval for Beta
+ for (i in 1:(n_col)) {
+   L_b = Confidence_Interval_of_B_vector_data$lowers[i]
+   U_b = Confidence_Interval_of_B_vector_data$uppers[i]
+   cat(paste0("Confidence Interval for B", i-1, ": [", L_b, ", ", U_b, "]\n"))
+ }
+ # Print the mean observation
+ cat("Mean Observation: ", L_Mean_Response[1], " < Y0 < ", U_Mean_Response[1], "\n")
+ # Print the new observation
+ cat("New Observation: ", L_New_Obs[1], " < Y_new < ", U_New_Obs[1], "\n")
+ # Print Standard Errors 
+ # Example plot
+ plot(di)
+ abline(h=c(3,-3),col="red")
+}
+print_function()
 }
 path <- noquote(choose.files())
 value_of_format <- as.numeric(readline("Which type of Data do you need? : \n1-CSV\n2-Excel\n3-Json\n4-XML\n5-SQL\n6-SAS\n7-SPSS\n8-Feather"))
