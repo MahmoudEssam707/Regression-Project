@@ -166,6 +166,13 @@ MLR <- function(Data){
   colnames(ANOVA)=c("Sum square","Degree of freedom","Mean sum square","F table")
   ANOVA<- as.table(ANOVA)
   SL <- as.numeric(readline("Enter significance level : "))
+  #Calculate  f test for MLR
+  Fc<- qf(SL, DFR, DFE)
+  if (F0 > Fc) {
+    print("H0=B1,B2,B3,....,Bn=0\n Reject H0, There's relation between X and Y")
+  } else {
+    print("at leastt one not equal zero \n dont reject H0, There's no relation")
+  }
   # FTEST
   #######
   #_______________________________# Ziad & Ali___________________________________________________#
