@@ -279,3 +279,62 @@ Function <- switch(value_of_regression,
                    SLR = SLR(Data),
                    MLR = MLR(Data),
                    stop("Invalid input. Please enter 1 or 2."))
+
+
+
+
+
+
+
+
+
+
+#-------------------------------partial f test-----------------------------------------#
+
+#partial f test
+partial_f_test<-function(Data){
+for(i in 1:(n_col-1)){
+  print(paste("H0:b",i,"= 0"))
+  print(paste("H1:b",i,"!= 0"))
+  data<-as.matrix(Data)
+  newdata<- data[,-i]
+  big_x_reduced <- cbind(b0=rep(1,length(data)),newdata)
+  x_reduced<- big_x_reduced[,-ncol(big_x_reduced)]
+  y_reduced <- subset(newdata, select = ncol(newdata))
+  xt_reduced<- t(x_reduced)
+  xtx_reduced <- xt_reduced%*%x_reduced
+  xtx_inverse_reduced <- solve(xtx_reduced)
+  xty_reduced <- xt_reduced%*%y_reduced
+  betas_reduced <- xtx_inverse_reduced%*%xt_reduced%*%y_reduced
+  y_hat_reduced <- x_reduced%*%betas_reduced
+  k_reduced <- ncol(big_x_reduced[, -c(1, ncol(big_x_reduced))])
+  p_reduced = k+1
+  y_bar_reduced=mean(y_reduced) 
+  n_row_reduced<-length(y_reduced) 
+  yt_reduced<- t(y_reduced)  
+  betas_t_reduced<-t(betas_reduced) 
+  betas_x_t_reduced<-betas_t_reduced%*%xt_reduced
+  SSE_reduced<-(yt_reduced%*%y_reduced)-(betas_x_t_reduced%*%y_reduced) 
+  SST_reduced<-(yt_reduced%*%y_reduced)-n_row_reduced*(y_bar_reduced)^2    
+  SSR_reduced=SST_reduced-SSE_reduced
+  F_node_reduced <-(((as.integer(SSR)-SSR_reduced))/as.integer(MSE))
+  SL <- as.numeric(readline("Enter significance level : "))
+  k_reduced <- k-1
+  DFR_reduced=k_reduced
+  p_reduced = k_reduced+1
+  DFE_reduced=n_row-p_reduced
+  F_calc_reduced=qf(SL,1, DFE_reduced)
+  beta_matrix<- matrix(nrow=n_col-1,ncol=1)
+  if(F_node_reduced > F_calc_reduced){
+    print(paste("reject h0 then the model depend on x",i))
+    print(paste(""))
+  }else{
+    print(paste('failed to reject ho then the model doest depend on x',i))
+    cat("")
+  }
+}
+}
+partial_f_test(Data)
+
+
+
