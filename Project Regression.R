@@ -78,7 +78,7 @@ SLR <- function(Data){
   lower_bound_b1 = B1[2]
   upper_bound_b1 = B1[1]
   Xn = as.numeric(readline("Enter the X for mean response: "))
-  RatX=Beta_0+Beta_1*Xn
+  R_atX=Beta_0+Beta_1*Xn
   t=qt(SL/2, length(x)-2,lower.tail = F)
   CL = as.numeric((1-SL)*100)
   L=RatX-t*sqrt(MSE*(1/length(x)+(Xn-xbar)^2/Sxx))
@@ -106,7 +106,7 @@ SLR <- function(Data){
               ,"\n[",L, ",",U,"]"
               ,"\nConfidence Interval for new observation at confidence level",CL,"%"
               ,"\n[",Lnew, ",",Unew,"]"))
-  ANOVA
+  print(ANOVA)
   plot(x,y,main = "Fitted Model",
        xlab ="Features",
        ylab="target")
@@ -308,8 +308,8 @@ MLR <- function(Data) {
       U_b = Confidence_Interval_of_B_vector_data$uppers[i]
       cat(paste0("Confidence Interval for B", i-1, ": [", L_b, ", ", U_b, "]\n"))
     }
-    # Print the mean observation
-    cat("Mean Observation: ", L_Mean_Response[1], " < Y0 < ", U_Mean_Response[1], "\n")
+    # Print the mean response
+    cat("Mean response: ", L_Mean_Response[1], " < Y0 < ", U_Mean_Response[1], "\n")
     # Print the new observation
     cat("New Observation: ", L_New_Obs[1], " < Y_new < ", U_New_Obs[1], "\n")
     # Print Standard Errors 
